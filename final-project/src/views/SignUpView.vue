@@ -11,7 +11,6 @@
     const u_email = ref("")
     const u_pass = ref("")
     var auth: Auth | null = null
-    var emailVerification = false
     const db:Firestore = getFirestore();
 
     function isValidInput(): boolean {
