@@ -13,6 +13,24 @@
 </template>
 
 <style scoped>
+
+html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+    body {
+        height: 100vh;
+        width: 100vw;
+      }
+
+    template {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+    }
 .logo {
   height: 6em;
   padding: 1.5em;
