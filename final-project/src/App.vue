@@ -6,6 +6,9 @@
     <div id="routing">
       <button id="loginbutton"><RouterLink to="/login">Login</RouterLink></button>
       <button id="signupbutton"><RouterLink to="/signup">Sign Up</RouterLink></button>
+      <button id="profschedbutton"><RouterLink to="/profSched">Professor Schedule</RouterLink></button>
+      <button id="homebutton"><RouterLink to="/app.vue">Home</RouterLink></button>
+      <button id="stuschedbutton"><RouterLink to="/stuSched">Student Schedule</RouterLink></button>
     </div>
     <h1>Website Name TBD </h1>
     <router-view></router-view>
@@ -28,11 +31,24 @@
 
 
 #loginbutton {
-    width: 150px;
+    width: 120px;
   }
   #signupbutton {
-    width: 150px;
+    width: 120px;
     margin-left: 10px;
+  }
+  #profschedbutton {
+    width: 120px;
+    margin-left: 10px;
+  }
+  #homebutton {
+    width: 120px;
+    margin-left: 10px;
+  }
+  #stuschedbutton {
+    width: 120px;
+    margin-left: 10px;
+    margin-top: 10px;
   }
   
 </style>
