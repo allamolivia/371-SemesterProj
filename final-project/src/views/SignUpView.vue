@@ -10,6 +10,10 @@
 
     const u_email = ref("")
     const u_pass = ref("")
+    const u_fname = ref("")
+    const u_lname = ref("")
+    const u_role = ref("")
+    
     var auth: Auth | null = null
     const db:Firestore = getFirestore();
 
@@ -56,6 +60,21 @@
         <input type="password" v-model="u_pass"
           placeholder="Enter your password">
       </div>
+      <div class="fnamediv">
+          <input v-model="u_fname" type="text"
+          placeholder="First Name">
+      </div>
+      <div class="lnamediv">
+          <input v-model="u_lname" type="text"
+          placeholder="Last Name">
+      </div>
+      <div class="radiodiv">
+        <p>Select your role: </p>
+        <input type="radio" id="student" name="user_role" value="Student">
+        <label for="student">Student</label><br>
+        <input type="radio" id="instructor" name="user_role" value="Instructor">
+        <label for="instructor">Instructor</label><br>
+      </div>
     </div>
     <div id="SignUp">
       <button :disabled="!isValidInput"
@@ -73,7 +92,7 @@
     margin-bottom:50px;
   }
 
-  .inputdiv {
+  div {
     margin-top: 15px;
   }
 </style>
