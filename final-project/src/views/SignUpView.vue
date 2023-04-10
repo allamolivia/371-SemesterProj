@@ -7,6 +7,7 @@
     createUserWithEmailAndPassword,
   } from "firebase/auth"
   import {  DocumentReference, setDoc, doc, Firestore, getFirestore } from "firebase/firestore";
+  
 
     const u_email = ref("")
     const u_pass = ref("")
@@ -30,7 +31,7 @@
         .then(async (cr: UserCredential) => {
           console.log("New account created with UID", cr.user?.email);
           const doc1: DocumentReference = doc(db, `users/${cr.user.uid}`);
-          setDoc(doc1, { })
+          setDoc(doc1, {fname: u_fname.value, lname: u_lname.value, role: u_role.value })
             .then(() => {
               console.log("New doc added");
              })
@@ -42,9 +43,17 @@
           .catch((err: any) => {
             console.error("Oops", err);
           });
-      }
 
-      
+      /*const doc1: DocumentReference = doc(db,`userinfo/${auth!.currentUser!.uid}`);
+      var x = document.getElementById("myRadio");
+      setDoc(doc1, { fname: u_fname.value, lname: u_lname.value, role: u_role.value})
+        .then(() => {
+          console.log("New doc added");
+        })
+      .catch((err:any) => {   }); */
+    }
+
+
   
   </script>
 
@@ -70,9 +79,9 @@
       </div>
       <div class="radiodiv">
         <p>Select your role: </p>
-        <input type="radio" id="student" name="user_role" value="Student">
+        <input type="radio" v-model="u_role" id="student" name="user_role" value="Student">
         <label for="student">Student</label><br>
-        <input type="radio" id="instructor" name="user_role" value="Instructor">
+        <input type="radio" v-model="u_role" id="instructor" name="user_role" value="Instructor">
         <label for="instructor">Instructor</label><br>
       </div>
     </div>
