@@ -43,14 +43,6 @@
           .catch((err: any) => {
             console.error("Oops", err);
           });
-
-      /*const doc1: DocumentReference = doc(db,`userinfo/${auth!.currentUser!.uid}`);
-      var x = document.getElementById("myRadio");
-      setDoc(doc1, { fname: u_fname.value, lname: u_lname.value, role: u_role.value})
-        .then(() => {
-          console.log("New doc added");
-        })
-      .catch((err:any) => {   }); */
     }
 
 

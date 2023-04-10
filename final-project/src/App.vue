@@ -1,4 +1,29 @@
 <script setup lang="ts">
+
+  import { onMounted } from 'vue'
+  import { getFirestore, Firestore, DocumentReference, doc, getDoc, DocumentSnapshot} from '@firebase/firestore';
+  import { getAuth, Auth, } from "firebase/auth"
+
+  var auth: Auth | null = null
+  const db:Firestore = getFirestore();
+  var role = ""
+
+  //auth = getAuth();
+
+  onMounted(() => {
+      auth = getAuth();
+      auth!.onAuthStateChanged(user => {
+        const myDoc:DocumentReference = doc(db, `users/${user!.uid}`);
+        getDoc(myDoc).then(
+          (qd:DocumentSnapshot) => {
+            if (qd.exists()) {
+              role = qd.data().role 
+            }
+        })
+      })
+    })
+
+
 </script>
 
 <template>
@@ -6,9 +31,14 @@
     <div id="routing">
       <button id="loginbutton"><RouterLink to="/login">Login</RouterLink></button>
       <button id="signupbutton"><RouterLink to="/signup">Sign Up</RouterLink></button>
-      <button id="profschedbutton"><RouterLink to="/profSched">Professor Schedule</RouterLink></button>
-      <button id="homebutton"><RouterLink to="/app.vue">Home</RouterLink></button>
-      <button id="stuschedbutton"><RouterLink to="/stuSched">Student Schedule</RouterLink></button>
+      <!--span v-show="auth"--> 
+        <button id="profschedbutton">
+          <RouterLink v-if="role==='Instructor'" to="/profSched">My Schedule</RouterLink>
+          <RouterLink v-if="role==='Student'" to="/stuSched">My Schedule</RouterLink>
+        </button> 
+      <!--/span-->
+      <button id="homebutton"><RouterLink to="/">Home</RouterLink></button>
+      
     </div>
     <h1>Website Name TBD </h1>
     <router-view></router-view>
