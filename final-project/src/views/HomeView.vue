@@ -1,4 +1,29 @@
 <script setup lang="ts">
+    import { ref, onMounted } from "vue"
+    import { getAuth, Auth } from "firebase/auth"
+    import {  DocumentReference, setDoc, doc, Firestore, getFirestore } from "firebase/firestore";
+    import {useRouter} from "vue-router"
+
+    var auth: Auth | null = null
+    var my_uid: string = ""
+
+    const appNav = useRouter()
+    const db:Firestore = getFirestore();
+    const course_name = ref("")
+    const course_code  = ref("")
+
+    onMounted(() => {
+        auth = getAuth();
+        auth!.onAuthStateChanged(user => {
+            if (user) { my_uid = user.uid; }
+        })
+    })
+
+    function goToNewCourse() {
+        appNav.push({ name: "NewCourse",
+        params: { userId: my_uid }
+        })
+    }
 </script>
 
 <template>
@@ -8,9 +33,10 @@
         </div>
         <div class="div2">
         </div>
-        <div class="div3"><RouterLink to="/newcourse">+ Add Course</RouterLink></div>
+        <div class="div3">
+            <button @click="goToNewCourse">+ New Course</button>
+        </div>
     </div>
-
 </template>
 
 <style scoped>

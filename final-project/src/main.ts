@@ -32,7 +32,7 @@ const myComponentRoutes = [
     { path: "/signup", component: SignUpView },
     { path: "/profSched", component: profSchedView },
     { path: "/stuSched", component: stuSchedView },    
-    { path: "/newcourse", component: NewCourseView }
+    { name: "NewCourse", component: NewCourseView, props: true, path: "/newcourse/:userId" }
 ];
 
 const myRouter = createRouter({
