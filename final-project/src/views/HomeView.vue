@@ -51,7 +51,7 @@
 </script>
 
 <template>
-    <div><h3>Welcome {{ u_fname }}!<button class="signoutbutton" @click="logOut">Sign Out</button></h3></div>
+    <div><h3 :key="u_fname">Welcome, {{ u_fname }}!<button class="signoutbutton" @click="logOut">Sign Out</button></h3></div>
     <div class="parent">
         <div class="div1">
             <p>My Courses</p>
