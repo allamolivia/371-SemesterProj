@@ -1,14 +1,8 @@
 <script setup lang="ts">
 
-  import { onMounted } from 'vue'
-  import { getFirestore, Firestore, DocumentReference, doc, getDoc, DocumentSnapshot} from '@firebase/firestore';
-  import { getAuth, Auth, } from "firebase/auth"
+  import { getFirestore, Firestore } from '@firebase/firestore';
 
-  var auth: Auth | null = null
   const db:Firestore = getFirestore();
-  var role = ""
-
-  //auth = getAuth();
 
 </script>
 

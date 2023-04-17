@@ -1,8 +1,9 @@
 <script setup lang="ts">
     import { ref, onMounted } from "vue"
     import { getAuth, Auth } from "firebase/auth"
-    import {  DocumentReference, setDoc, doc, Firestore, getFirestore } from "firebase/firestore";
+    import {  DocumentReference, getDoc, DocumentSnapshot, doc, Firestore, getFirestore } from "firebase/firestore";
     import {useRouter} from "vue-router"
+    import { UserType } from "./DataTypes.vue";
 
     var auth: Auth | null = null
     // var my_uid: string = ""
@@ -11,12 +12,23 @@
     const db:Firestore = getFirestore();
     const course_name = ref("")
     const course_code  = ref("")
+    const u_fname = ref("")
 
     type HomeViewDetailType = {
         userId: string;
     }
 
     const props = defineProps<HomeViewDetailType>()
+
+        const myDoc:DocumentReference = doc(db, `users/${props.userId}`);
+
+        getDoc(myDoc).then(
+            (qd:DocumentSnapshot) => {
+                if (qd.exists()) {
+                    const userData = qd.data() as UserType
+                    u_fname.value = userData.fname;
+                }
+        })
 
     onMounted(() => {
         auth = getAuth();
@@ -39,7 +51,7 @@
 </script>
 
 <template>
-    <div><p>Signed in as: <button @click="logOut">Sign Out</button></p></div>
+    <div><h3>Welcome {{ u_fname }}!<button class="signoutbutton" @click="logOut">Sign Out</button></h3></div>
     <div class="parent">
         <div class="div1">
             <p>My Courses</p>
@@ -95,6 +107,10 @@
 
     button {
         padding: 20px;
+    }
+
+    .signoutbutton {
+        margin-left: 10px;
     }
 
 </style>
