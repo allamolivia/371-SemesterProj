@@ -7,10 +7,12 @@
     signInWithEmailAndPassword,
     GoogleAuthProvider, signInWithPopup
   } from "firebase/auth"
+  import {useRouter} from "vue-router"
 
     const u_email = ref("")
     const u_pass = ref("")
     const message = ref(" ")
+    const appNav = useRouter()
     var auth: Auth | null = null
 
     function isValidInput(): boolean {
@@ -26,6 +28,11 @@
       .then(async (cr: UserCredential) => {
         console.log("login successfull.")
         message.value=("login successful!")
+
+        appNav.push({ name: "MyHome",
+        params: { userId: cr.user.uid }
+        })
+    
       })
       .catch((err: any) => {
 
@@ -35,6 +42,7 @@
           message.value=(`Unable to login. ${err}`)
         }
       });
+    
   }
   
   const auth1 = getAuth();
@@ -66,6 +74,7 @@
       <button :disabled="!isValidInput"
         @click="withEmail">Sign in</button>
     </div>
+    <p>Don't have an account? <RouterLink to="/signup">Sign Up</RouterLink></p>
     <p>{{ message }}</p>
 </div>
 </template>

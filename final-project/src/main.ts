@@ -27,8 +27,8 @@ import stuSchedView from "./views/stuSchedView.vue"
 import NewCourseView from "./views/NewCourseView.vue"
 
 const myComponentRoutes = [
-    { path: "/", component: HomeView },
-    { path: "/login", component: LoginView },
+    { name: "MyHome", component: HomeView, props: true, path: "/home/:userId" },
+    { path: "/", component: LoginView },
     { path: "/signup", component: SignUpView },
     { path: "/profSched", component: profSchedView },
     { path: "/stuSched", component: stuSchedView },    

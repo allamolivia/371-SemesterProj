@@ -7,13 +7,15 @@
     createUserWithEmailAndPassword,
   } from "firebase/auth"
   import {  DocumentReference, setDoc, doc, Firestore, getFirestore } from "firebase/firestore";
-  
+  import {useRouter} from "vue-router"
 
-    const u_email = ref("")
-    const u_pass = ref("")
-    const u_fname = ref("")
-    const u_lname = ref("")
-    const u_role = ref("")
+  const appNav = useRouter()
+  const u_email = ref("")
+  const u_pass = ref("")
+  const u_fname = ref("")
+  const u_lname = ref("")
+  const u_role = ref("")
+  const courses: string[] = [];
     
     var auth: Auth | null = null
     const db:Firestore = getFirestore();
@@ -31,10 +33,13 @@
         .then(async (cr: UserCredential) => {
           console.log("New account created with UID", cr.user?.email);
           const doc1: DocumentReference = doc(db, `users/${cr.user.uid}`);
-          setDoc(doc1, {fname: u_fname.value, lname: u_lname.value, role: u_role.value })
+          setDoc(doc1, {fname: u_fname.value, lname: u_lname.value, role: u_role.value, courses: courses })
             .then(() => {
               console.log("New doc added");
              })
+          appNav.replace({ name: "MyHome",
+            params: { userId: cr.user.uid }
+          })
           .catch((err:any) => { /* your code here */ });
           })
           .catch((err: any) => {
@@ -81,6 +86,7 @@
       <button :disabled="!isValidInput"
         @click="createAccount">Sign up</button>
     </div>
+    <p>Already have an account? <RouterLink to="/">Log In</RouterLink></p>
 </div>
 </template>
 

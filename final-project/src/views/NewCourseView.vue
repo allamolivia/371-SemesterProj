@@ -1,12 +1,13 @@
 <script setup lang="ts">
     import { ref, onMounted } from "vue"
     import {  DocumentReference, getDoc, doc, Firestore, getFirestore, 
-            DocumentSnapshot, addDoc, CollectionReference, collection } 
+            DocumentSnapshot, setDoc, CollectionReference, collection, updateDoc, arrayUnion } 
             from "firebase/firestore";
 
     const db:Firestore = getFirestore();
     const course_name = ref("");
     const course_code  = ref("");
+    const studentIds: string[] = [];
 
     type NewCourseDetailType = {
         userId: string;
@@ -15,23 +16,28 @@
     const props = defineProps<NewCourseDetailType>()
 
     function addCourse() {
-        const myDoc:DocumentReference = doc(db, `users/${props.userId}`);
-        getDoc(myDoc).then(
+        const myUser:DocumentReference = doc(db, `users/${props.userId}`);
+        getDoc(myUser).then(
             (qd:DocumentSnapshot) => {
                 if (qd.exists()) {
                     var profFname = qd.data().fname
                     var profLname = qd.data().lname
+                    const newDoc: DocumentReference = doc(db, "courses", `${course_code.value}`)
 
-                    const myColl: CollectionReference = collection(db, "courses")
-                    addDoc(myColl, {    
+                    setDoc(newDoc, {    
                                         name: course_name.value, 
-                                        code: course_code.value, 
                                         profuid: props.userId, 
                                         proffname: profFname, 
-                                        proflname: profLname 
+                                        proflname: profLname,
+                                        studentIds: studentIds
                     })
+
                     .then(() => {
                     console.log("New doc Added ");
+                    updateDoc(myUser, {
+                        courses: arrayUnion(course_code.value)
+                        })
+                        .then(() => { console.debug("Update success");})
                     })
                     .catch((err:any) => { /* your code here */ }); 
                 }

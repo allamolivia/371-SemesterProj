@@ -5,28 +5,41 @@
     import {useRouter} from "vue-router"
 
     var auth: Auth | null = null
-    var my_uid: string = ""
+    // var my_uid: string = ""
 
     const appNav = useRouter()
     const db:Firestore = getFirestore();
     const course_name = ref("")
     const course_code  = ref("")
 
+    type HomeViewDetailType = {
+        userId: string;
+    }
+
+    const props = defineProps<HomeViewDetailType>()
+
     onMounted(() => {
         auth = getAuth();
-        auth!.onAuthStateChanged(user => {
+       /*auth!.onAuthStateChanged(user => {
             if (user) { my_uid = user.uid; }
-        })
+        }) */
     })
 
     function goToNewCourse() {
         appNav.push({ name: "NewCourse",
-        params: { userId: my_uid }
+        params: { userId: props.userId }
         })
     }
+
+    function logOut() {
+        auth!.signOut();
+        appNav.back()
+    }
+
 </script>
 
 <template>
+    <div><p>Signed in as: <button @click="logOut">Sign Out</button></p></div>
     <div class="parent">
         <div class="div1">
             <p>My Courses</p>
@@ -47,8 +60,8 @@
         grid-column-gap: 3px;
         grid-row-gap: 3px;
 
-        height: 100%;
-        width: 100%;
+        height: 500px;
+        width: 1200px;
         padding: 10px;
     }
 
@@ -77,6 +90,11 @@
         border-color: black;
         height: 100%;
         width: 100%;
+        text-align: center;
+    }
+
+    button {
+        padding: 20px;
     }
 
 </style>
