@@ -51,6 +51,10 @@
   signInWithPopup(auth1, provider)
     .then((cred:UserCredential) => {
       console.log("Signed in as", cred.user?.email);
+
+      appNav.push({ name: "MyHome",
+        params: { userId: cred.user.uid }
+        })
     })
     .catch((err: any) => {
       console.error("Oops", err);

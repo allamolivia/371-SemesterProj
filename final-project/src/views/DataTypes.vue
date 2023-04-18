@@ -5,4 +5,12 @@ export type UserType = {
     lname: string,
     role: string
 }
+
+export type CourseType = {
+    name: string,
+    proffname: string,
+    proflname: string,
+    profuid: string,
+    studentIds: string[]
+}
 </script>
