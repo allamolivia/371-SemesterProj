@@ -54,8 +54,8 @@
     <div class="parent">
         <div class="div1">
             <p>My Courses 
-                <button v-if="role == 'Instructor'" @click="goToNewCourse">+ New Course</button>
-                <button v-else-if="role == 'Student'" @click="goToNewCourse">Join Course</button>
+                <button class="coursebutton" v-if="role == 'Instructor'" @click="goToNewCourse">+ New Course</button>
+                <button class="coursebutton" v-else-if="role == 'Student'" @click="goToNewCourse">Join Course</button>
             </p>
         </div>
         <div class="div2">
@@ -97,7 +97,7 @@
         width: 100%;
     }
 
-    button {
+    .coursebutton {
         float: right;
         margin-right: 20px;
     }
