@@ -42,6 +42,12 @@
         })
     }
 
+    function goToJoinCourse() {
+        appNav.push({ name: "JoinCourse",
+        params: { userId: props.userId }
+        })
+    }
+
     function logOut() {
         auth!.signOut();
         appNav.back()
@@ -55,7 +61,7 @@
         <div class="div1">
             <p>My Courses 
                 <button class="coursebutton" v-if="role == 'Instructor'" @click="goToNewCourse">+ New Course</button>
-                <button class="coursebutton" v-else-if="role == 'Student'" @click="goToNewCourse">Join Course</button>
+                <button class="coursebutton" v-else-if="role == 'Student'" @click="goToJoinCourse">Join Course</button>
             </p>
         </div>
         <div class="div2">

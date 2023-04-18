@@ -22,8 +22,8 @@ import LoginView from "./views/LoginView.vue"
 import SignUpView from "./views/SignUpView.vue"
 import HomeView from "./views/HomeView.vue"
 import profSchedView from "./views/profSchedView.vue"
-import stuSchedView from "./views/stuSchedView.vue"
-
+import stuSchedView from "./views/stuSchedView.vue" 
+import JoinCourseView from "./views/JoinCourseView.vue"
 import NewCourseView from "./views/NewCourseView.vue"
 
 const myComponentRoutes = [
@@ -32,7 +32,8 @@ const myComponentRoutes = [
     { path: "/signup", component: SignUpView },
     { path: "/profSched", component: profSchedView },
     { path: "/stuSched", component: stuSchedView },    
-    { name: "NewCourse", component: NewCourseView, props: true, path: "/newcourse/:userId" }
+    { name: "NewCourse", component: NewCourseView, props: true, path: "/newcourse/:userId" },
+    { name: "JoinCourse", component: JoinCourseView, props: true, path: "/joincourse/:userId" }
 ];
 
 const myRouter = createRouter({
