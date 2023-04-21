@@ -1,9 +1,9 @@
 <script setup lang="ts">
-    import { Ref, ref, onMounted } from "vue"
+    import { ref, onMounted } from "vue"
     import { getAuth, Auth } from "firebase/auth"
-    import { DocumentData, QueryDocumentSnapshot, QuerySnapshot, collection, CollectionReference, getDocs, DocumentReference, getDoc, DocumentSnapshot, doc, Firestore, getFirestore } from "firebase/firestore";
+    import {  DocumentReference, getDoc, DocumentSnapshot, doc, Firestore, getFirestore } from "firebase/firestore";
     import {useRouter} from "vue-router"
-    import { UserType, CourseType } from "./DataTypes.vue";
+    import { UserType } from "./DataTypes.vue";
 
     var auth: Auth | null = null
     var role = ("")
@@ -13,8 +13,6 @@
     const course_name = ref("")
     const course_code  = ref("")
     const u_fname = ref("")
-    const docId = ref("")
-    const allCourse: Ref<String[]> = ref([]);
     
 
     type HomeViewDetailType = {
@@ -24,7 +22,6 @@
     const props = defineProps<HomeViewDetailType>()
 
     const myDoc:DocumentReference = doc(db, `users/${props.userId}`);
-    const myColl:CollectionReference = collection(db, "courses")
 
     getDoc(myDoc).then(
         (qd:DocumentSnapshot) => {
@@ -37,13 +34,6 @@
 
     onMounted(() => {
         auth = getAuth();
-    })
-
-    getDocs(myColl).then((qs: QuerySnapshot) => {
-        qs.forEach((qd:QueryDocumentSnapshot) => {
-            const courseData = qd.data() as CourseType
-            allCourse.value.push(qd.id)
-        }) 
     })
 
     function goToNewCourse() {
@@ -73,7 +63,6 @@
                 <button class="coursebutton" v-if="role == 'Instructor'" @click="goToNewCourse">+ New Course</button>
                 <button class="coursebutton" v-else-if="role == 'Student'" @click="goToJoinCourse">Join Course</button>
             </p>
-            <p>{{ allCourse }}</p>
         </div>
         <div class="div2">
         </div>
