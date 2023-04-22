@@ -15,7 +15,7 @@
 
 <style scoped>
 
-html,
+html 
       body {
         margin: 0;
         padding: 0;
@@ -32,6 +32,7 @@ html,
         height: 100vh;
         width: 100vw;
     }
+  
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -65,6 +66,13 @@ html,
     width: 120px;
     margin-left: 10px;
     margin-top: 10px;
+  }
+
+  h1 {
+  font-size: 3em;
+  line-height: 1;
+  margin-bottom: 25px;
+  border-bottom: 5px solid black;
   }
   
 </style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { ref, onMounted, Ref } from "vue"
     import { getAuth, Auth } from "firebase/auth"
-    import { CollectionReference, collection, getDocs, QuerySnapshot, QueryDocumentSnapshot, DocumentReference, getDoc, DocumentSnapshot, doc, Firestore, getFirestore } from "firebase/firestore";
+    import { updateDoc, arrayRemove, where, query, arrayUnion, deleteDoc, CollectionReference, collection, getDocs, QuerySnapshot, QueryDocumentSnapshot, DocumentReference, getDoc, DocumentSnapshot, doc, Firestore, getFirestore } from "firebase/firestore";
     import {useRouter} from "vue-router"
     import { UserType, CourseType } from "./DataTypes.vue";
 
@@ -68,10 +68,26 @@
             }
         })
 
+    function deleteCourse(courseCode: String[]) {
+
+        const course: DocumentReference = doc(db, `courses/${courseCode}`)
+        const myCol: CollectionReference = collection(db, `courses`)
+        const qr = query(myCol, where("course", "==", `${course}`))
+        const user: DocumentReference = doc(db, `users/${props.userId}`)
+
+        getDocs(qr).then((qs:QuerySnapshot) => {
+            qs.forEach(async (qd:QueryDocumentSnapshot) => {
+                const myDoc = doc(db, qd.id);
+                await deleteDoc(myDoc)
+        })
+    })
+}
+
 </script>
 
 <template>
-    <div><h3 :key="u_fname">Welcome, {{ u_fname }}!<button class="signoutbutton" @click="logOut()"><RouterLink to="/">Sign Out</RouterLink></button></h3></div>
+    <h2 :key="u_fname">Welcome, {{ u_fname }}!</h2>
+    <button class="coursebutton" @click="logOut()"><RouterLink to="/">Sign Out</RouterLink></button>
     <div class="parent">
         <div class="div1">
             <p>
@@ -79,13 +95,17 @@
                 <button class="coursebutton" v-else-if="role == 'Student'" @click="goToJoinCourse">Join Course</button>
                 <button class="coursebutton" @click="goToMySchedule">My Schedule</button>
             </p>
-            <table class="courseTable">
+            <table style="margin-top: 20px;" class="courseTable">
                 <th class="courseTable">My Courses:</th>
                 <tr class="courseTable" v-for="(i, pos) in allCourse" :key="pos">{{ i }}</tr>
             </table>
 
         </div>
         <div class="div2">
+            <table style="margin-top: 20px;" class="courseTable">
+                <th class="courseTable">Delete Courses:</th>
+                <tr class="courseTable" v-for="(i, pos) in allCourse" :key="pos"><button id="deletecoursebutton" @click="deleteCourse(allCourse)">{{ i }}</button></tr>
+            </table>
         </div>
     </div>
 </template>
@@ -101,6 +121,8 @@
         height: 500px;
         width: 1200px;
         padding: 10px;
+        margin-right: 12%;
+        margin-left: 8%;
     }
 
     template {
@@ -112,20 +134,19 @@
 
     .div1 { 
         grid-area: 1 / 1 / 6 / 3;
-        background-color: #3b3b3b;
+        background-color: gray;
         border-color: black;
         height: 100%;
-        width: 100%;
-        color: white;
+        width: 500px;
     }
     .div2 { grid-area: 1 / 3 / 6 / 6;
-        background-color: #3b3b3b;
+        background-color: gray;
         border-color: black; 
         height: 100%;
-        width: 100%;
+        width: 500px;
     }
 
-    .coursebutton {
+    /* .coursebutton {
         float: right;
         margin-right: 20px;
         border-color: white;
@@ -135,23 +156,126 @@
         margin-left: 40px;
         margin-right: 60px;
         margin-top: 20px;
-    }
+    } */
 
-    .signoutbutton {
+    /* .signoutbutton {
         margin-left: 10px;
         border-color: black;
         padding-right: 5px;
         padding-left: 5px;
-    }
+    } */
 
     .courseTable {
         text-align: center;
-        border: 1px solid white;
-        border-color: white;
+        border: 2px solid black;
+        border-color: black;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 80px;
+        margin-top: 30px;
         padding: 5px;
+        color: black;
+        width: 250px;
+        height: auto;
+        background-color: rgba(255, 255, 255, 0.87);
+        font-size: 1em;
+        font-weight: 500;
+        font-family: inherit;
+        color: black;
     }
+    
+
+    #deletecoursebutton {
+        width: 100%;
+        padding: 0.6em 1.2em;
+        color: black;
+        font-size: 1em;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer; 
+    }
+
+    #deletecoursebutton:hover {
+        color: #535bf2;
+    }
+
+    :root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+button:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  /*place-items: center;*/
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 2em;
+  line-height: 0.8;
+  font-family: inherit;
+}
+
+.coursebutton {
+  border-radius: 8px;
+  border: 2px solid black;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  margin-top: 20px;
+  margin-left: 3px;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
 
 </style>
