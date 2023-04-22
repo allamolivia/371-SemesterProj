@@ -8,7 +8,7 @@
 
 <template>
   <div>
-    <h1>Website Name TBD </h1>
+    <h1>My Class Scheduler</h1>
     <router-view></router-view>
   </div>
 </template>

@@ -15,6 +15,7 @@ export type CourseType = {
     code: string,
     startTime: number,
     endTime: number,
-    date: string
+    startDate: string,
+    schedule: string[]
 }
 </script>

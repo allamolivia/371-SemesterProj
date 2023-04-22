@@ -60,12 +60,13 @@
     })
     }
 
-    getDocs(myColl).then((qs: QuerySnapshot) => {
-        qs.forEach((qd:QueryDocumentSnapshot) => {
-            const courseData = qd.data() as CourseType
-            allCourse.value.push(qd.id)
-        }) 
-    })
+    getDoc(myDoc).then(
+        (qd:DocumentSnapshot) => {
+            if (qd.exists()) {
+                const userData = qd.data() as UserType
+                userData.courses.forEach(element => allCourse.value.push(element))
+            }
+        })
 
 </script>
 
@@ -80,7 +81,7 @@
             </p>
             <table class="courseTable">
                 <th class="courseTable">My Courses:</th>
-                <tr class="courseTable" v-for="i in allCourse.length">{{ allCourse[i] }}</tr>
+                <tr class="courseTable" v-for="(i, pos) in allCourse" :key="pos">{{ i }}</tr>
             </table>
 
         </div>
