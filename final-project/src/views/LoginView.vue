@@ -76,7 +76,7 @@
     </div>
     <div id="SignUp">
       <button :disabled="!isValidInput"
-        @click="withEmail">Sign in</button>
+        @click="withEmail(); signInWithPopup(auth1, provider)">Sign in</button>
     </div>
     <p>Don't have an account? <RouterLink to="/signup">Sign Up</RouterLink></p>
     <p>{{ message }}</p>

@@ -5,6 +5,8 @@ import {getFirestore, Firestore, collection} from "firebase/firestore"
 
 import { initializeApp,FirebaseApp } from "firebase/app";
 
+import { ProCalendar } from "@lbgm/pro-calendar-vue";
+
 const firebaseConfig = {
     apiKey: "AIzaSyAi6n1mbO5_i_FKRGemqO9iwjfuTUIYTis",
     authDomain: "finalprojauth.firebaseapp.com",
@@ -25,6 +27,7 @@ import profSchedView from "./views/profSchedView.vue"
 import stuSchedView from "./views/stuSchedView.vue" 
 import JoinCourseView from "./views/JoinCourseView.vue"
 import NewCourseView from "./views/NewCourseView.vue"
+import MySchedule from "./views/MySchedule.vue"
 
 const myComponentRoutes = [
     { name: "MyHome", component: HomeView, props: true, path: "/home/:userId" },
@@ -33,7 +36,8 @@ const myComponentRoutes = [
     { path: "/profSched", component: profSchedView },
     { path: "/stuSched", component: stuSchedView },    
     { name: "NewCourse", component: NewCourseView, props: true, path: "/newcourse/:userId" },
-    { name: "JoinCourse", component: JoinCourseView, props: true, path: "/joincourse/:userId" }
+    { name: "JoinCourse", component: JoinCourseView, props: true, path: "/joincourse/:userId" },
+    { name: "MySchedule", component: MySchedule, props: true, path: "/MySchedule/:userId"}
 ];
 
 const myRouter = createRouter({
@@ -43,6 +47,6 @@ const myRouter = createRouter({
 
 const myApp: FirebaseApp = initializeApp(firebaseConfig);
 const db:Firestore = getFirestore(myApp);
-createApp(App).use(myRouter).mount("#app");
+createApp(App).use(ProCalendar).use(myRouter).mount("#app");
 
 const users = collection(db, "users")

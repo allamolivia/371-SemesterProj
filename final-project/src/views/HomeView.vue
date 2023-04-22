@@ -1,9 +1,9 @@
 <script setup lang="ts">
-    import { ref, onMounted } from "vue"
+    import { ref, onMounted, Ref } from "vue"
     import { getAuth, Auth } from "firebase/auth"
-    import {  DocumentReference, getDoc, DocumentSnapshot, doc, Firestore, getFirestore } from "firebase/firestore";
+    import { CollectionReference, collection, getDocs, QuerySnapshot, QueryDocumentSnapshot, DocumentReference, getDoc, DocumentSnapshot, doc, Firestore, getFirestore } from "firebase/firestore";
     import {useRouter} from "vue-router"
-    import { UserType } from "./DataTypes.vue";
+    import { UserType, CourseType } from "./DataTypes.vue";
 
     var auth: Auth | null = null
     var role = ("")
@@ -13,6 +13,8 @@
     const course_name = ref("")
     const course_code  = ref("")
     const u_fname = ref("")
+    const allCourse: Ref<String[]> = ref([]);
+    const myColl:CollectionReference = collection(db, "courses")
     
 
     type HomeViewDetailType = {
@@ -50,19 +52,37 @@
 
     function logOut() {
         auth!.signOut();
-        appNav.back()
     }
+
+    function goToMySchedule() {
+        appNav.push({ name: "MySchedule",
+        params: { userId: props.userId }
+    })
+    }
+
+    getDocs(myColl).then((qs: QuerySnapshot) => {
+        qs.forEach((qd:QueryDocumentSnapshot) => {
+            const courseData = qd.data() as CourseType
+            allCourse.value.push(qd.id)
+        }) 
+    })
 
 </script>
 
 <template>
-    <div><h3 :key="u_fname">Welcome, {{ u_fname }}!<button class="signoutbutton" @click="logOut">Sign Out</button></h3></div>
+    <div><h3 :key="u_fname">Welcome, {{ u_fname }}!<button class="signoutbutton" @click="logOut()"><RouterLink to="/">Sign Out</RouterLink></button></h3></div>
     <div class="parent">
         <div class="div1">
-            <p>My Courses 
+            <p>
                 <button class="coursebutton" v-if="role == 'Instructor'" @click="goToNewCourse">+ New Course</button>
                 <button class="coursebutton" v-else-if="role == 'Student'" @click="goToJoinCourse">Join Course</button>
+                <button class="coursebutton" @click="goToMySchedule">My Schedule</button>
             </p>
+            <table class="courseTable">
+                <th class="courseTable">My Courses:</th>
+                <tr class="courseTable" v-for="i in allCourse.length">{{ allCourse[i] }}</tr>
+            </table>
+
         </div>
         <div class="div2">
         </div>
@@ -95,6 +115,7 @@
         border-color: black;
         height: 100%;
         width: 100%;
+        color: white;
     }
     .div2 { grid-area: 1 / 3 / 6 / 6;
         background-color: #3b3b3b;
@@ -106,10 +127,30 @@
     .coursebutton {
         float: right;
         margin-right: 20px;
+        border-color: white;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 5px;
+        margin-left: 40px;
+        margin-right: 60px;
+        margin-top: 20px;
     }
 
     .signoutbutton {
         margin-left: 10px;
+        border-color: black;
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+    .courseTable {
+        text-align: center;
+        border: 1px solid white;
+        border-color: white;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 80px;
+        padding: 5px;
     }
 
 </style>

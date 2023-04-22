@@ -9,7 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google-cloud/local-auth": "^2.1.0",
+    "@lbgm/pro-calendar-vue": "^1.1.6-alpha.0",
     "firebase": "^9.19.0",
+    "googleapis": "^105.0.0",
+    "oneday": "github:dev-charles15531/v3-events-calendar",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },

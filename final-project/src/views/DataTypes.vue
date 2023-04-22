@@ -12,6 +12,9 @@ export type CourseType = {
     proflname: string,
     profuid: string,
     studentIds: string[],
-    code: string
+    code: string,
+    startTime: number,
+    endTime: number,
+    date: string
 }
 </script>

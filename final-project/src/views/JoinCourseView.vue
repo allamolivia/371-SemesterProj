@@ -6,6 +6,7 @@
     import { CourseType } from "./DataTypes.vue";
     import {useRouter} from "vue-router"
 
+
     const db:Firestore = getFirestore();
     const allCourses: Ref<CourseType[]> = ref([]);
     const appNav = useRouter()
@@ -29,15 +30,19 @@
     function joinCourse(courseCode: string) {
 
         const course: DocumentReference = doc(db, `courses/${courseCode}`)
+        const user: DocumentReference = doc(db, `users/${props.userId}`)
 
         updateDoc(course, {
             studentIds: arrayUnion(props.userId)
         })
         .then(() => { console.debug("Update successful");})
+        updateDoc(user, {
+            courses: arrayUnion(courseCode)
+        })
+        .then(() => { console.debug("Update successful");})
         appNav.back()
+
     }
-
-
 
 </script>
 

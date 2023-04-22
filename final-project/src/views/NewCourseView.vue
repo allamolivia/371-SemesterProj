@@ -3,17 +3,26 @@
     import {  DocumentReference, getDoc, doc, Firestore, getFirestore, 
             DocumentSnapshot, setDoc, CollectionReference, collection, updateDoc, arrayUnion } 
             from "firebase/firestore";
+    import {useRouter} from "vue-router"
 
     const db:Firestore = getFirestore();
     const course_name = ref("");
     const course_code  = ref("");
     const studentIds: string[] = [];
+    const strtTime = ref("");
+    const ndTime = ref("");
+    const date = ref("");
 
     type NewCourseDetailType = {
         userId: string;
     }
 
+    const appNav = useRouter()
     const props = defineProps<NewCourseDetailType>()
+
+    function goToHome() {
+        appNav.push({ name: "MyHome"})
+    }
 
     function addCourse() {
         const myUser:DocumentReference = doc(db, `users/${props.userId}`);
@@ -29,7 +38,9 @@
                                         profuid: props.userId, 
                                         proffname: profFname, 
                                         proflname: profLname,
-                                        studentIds: studentIds
+                                        studentIds: studentIds,
+                                        endTime: ndTime.value,
+                                        startTime: strtTime.value
                     })
 
                     .then(() => {
@@ -60,8 +71,20 @@
             <input v-model="course_code" type="text"
             placeholder="Course code">
         </div>
+        <div>
+            <p>Start Time: </p>
+            <input v-model="strtTime" type="time">
+        </div>
+        <div>
+            <p>End Time: </p>
+            <input v-model="ndTime" type="time">
+        </div>
+        <div>
+            <p>Date: </p>
+            <input v-model="date" type="date">
+        </div>
         <div class="buttondiv">  
-            <button @click="addCourse">Add Course</button>
+            <button @click="addCourse(); goToHome()">Add Course</button>
         </div>
     </div>
 </template>
