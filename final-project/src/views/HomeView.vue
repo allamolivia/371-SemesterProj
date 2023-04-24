@@ -13,9 +13,8 @@
     const course_name = ref("")
     const course_code  = ref("")
     const u_fname = ref("")
-    const allCourse: Ref<String[]> = ref([]);
+    const allCourse: Ref<CourseType[]> = ref([]);
     const myColl:CollectionReference = collection(db, "courses")
-    
 
     type HomeViewDetailType = {
         userId: string;
@@ -33,6 +32,15 @@
                 role = userData.role;
             }
         })
+
+    const myStateColl:CollectionReference = collection(db, "courses");
+    getDocs(myStateColl).then(
+        (qs: QuerySnapshot) => {
+            qs.forEach((qd:QueryDocumentSnapshot) => {
+                const courseData = qd.data() as CourseType
+                courseData.code = qd.id
+            })
+    })
 
     onMounted(() => {
         auth = getAuth();
@@ -68,43 +76,48 @@
             }
         })
 
-    function deleteCourse(courseCode: String[]) {
+    function deleteCourse(courseCode: CourseType) {
 
         const course: DocumentReference = doc(db, `courses/${courseCode}`)
-        const myCol: CollectionReference = collection(db, `courses`)
-        const qr = query(myCol, where("course", "==", `${course}`))
         const user: DocumentReference = doc(db, `users/${props.userId}`)
 
-        getDocs(qr).then((qs:QuerySnapshot) => {
-            qs.forEach(async (qd:QueryDocumentSnapshot) => {
-                const myDoc = doc(db, qd.id);
-                await deleteDoc(myDoc)
+        updateDoc(course, {
+            studentIds: arrayRemove(props.userId)
         })
-    })
-}
+        .then(() => { console.debug("Update successful");})
+        updateDoc(user, {
+            courses: arrayRemove(courseCode)
+        })
+        .then(() => { console.debug("Update successful");})
+    }
 
 </script>
 
 <template>
     <h2 :key="u_fname">Welcome, {{ u_fname }}!</h2>
-    <button class="coursebutton" @click="logOut()"><RouterLink to="/">Sign Out</RouterLink></button>
+    <div><button class="coursebutton" @click="logOut()"><RouterLink to="/">Sign Out</RouterLink></button></div>
+    <button class="coursebutton" v-if="role == 'Instructor'" @click="goToNewCourse">+ New Course</button>
+    <button class="coursebutton" v-else-if="role == 'Student'" @click="goToJoinCourse">Join Course</button>
+    <button class="coursebutton" @click="goToMySchedule">My Schedule</button>
     <div class="parent">
         <div class="div1">
             <p>
-                <button class="coursebutton" v-if="role == 'Instructor'" @click="goToNewCourse">+ New Course</button>
+                <!-- <button class="coursebutton" v-if="role == 'Instructor'" @click="goToNewCourse">+ New Course</button>
                 <button class="coursebutton" v-else-if="role == 'Student'" @click="goToJoinCourse">Join Course</button>
-                <button class="coursebutton" @click="goToMySchedule">My Schedule</button>
+                <button class="coursebutton" @click="goToMySchedule">My Schedule</button> -->
             </p>
             <table style="margin-top: 20px;" class="courseTable">
                 <th class="courseTable">My Courses:</th>
-                <tr class="courseTable" v-for="(i, pos) in allCourse" :key="pos">{{ i }}</tr>
+                <tr class="courseTable" v-for="(i, pos) in allCourse" :key="pos"><p id="courseList">{{ i }}</p></tr>
             </table>
 
         </div>
         <div class="div2">
             <table style="margin-top: 20px;" class="courseTable">
-                <th class="courseTable">Delete Courses:</th>
-                <tr class="courseTable" v-for="(i, pos) in allCourse" :key="pos"><button id="deletecoursebutton" @click="deleteCourse(allCourse)">{{ i }}</button></tr>
+            <th class="courseTable">Delete Courses:</th>
+                <tr class="courseTable" v-for="(c,arrIdx) in allCourse" v-bind:key="arrIdx">
+                    <button id="deletecoursebutton" @click="deleteCourse(c)">{{ c }}</button>
+                </tr>
             </table>
         </div>
     </div>
@@ -181,6 +194,15 @@
         font-weight: 500;
         font-family: inherit;
         color: black;
+    }
+
+    #courseList {
+        width: 100%;
+        padding: 0.6em 1.2em;
+        color: black;
+        font-size: 1em;
+        font-weight: 500;
+        font-family: inherit;
     }
     
 
