@@ -13,7 +13,7 @@
     const course_name = ref("")
     const course_code  = ref("")
     const u_fname = ref("")
-    const allCourse: Ref<CourseType[]> = ref([]);
+    const allCourse: Ref<String[]> = ref([]);
     const myColl:CollectionReference = collection(db, "courses")
 
     type HomeViewDetailType = {
@@ -110,13 +110,13 @@
                 <th class="courseTable">My Courses:</th>
                 <tr class="courseTable" v-for="(i, pos) in allCourse" :key="pos"><p id="courseList">{{ i }}</p></tr>
             </table>
-
+            
         </div>
         <div class="div2">
             <table style="margin-top: 20px;" class="courseTable">
             <th class="courseTable">Delete Courses:</th>
                 <tr class="courseTable" v-for="(c,arrIdx) in allCourse" v-bind:key="arrIdx">
-                    <button id="deletecoursebutton" @click="deleteCourse(c)">{{ c }}</button>
+                    <button id="deletecoursebutton">{{ c }}</button>
                 </tr>
             </table>
         </div>
